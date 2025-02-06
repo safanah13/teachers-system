@@ -2,32 +2,92 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <!-- التحقق من تسجيل الدخول -->
+    <script>
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
 
-  
-<div style="text-align: center; direction: rtl; margin-bottom: 20px;">
-    <h2>ابتدائية الإمام محمد بن علي القشيري</h2>
-    <h3>إحصائية عامة عن أعمال المعلمين بمنصة مدرستي</h3>
-    <h4>من تاريخ 14-2-1446 إلى 30-7-1446</h4>
-    <div style="margin: 10px;">
-      <span style="color: blue; margin-right: 10px;">■ نسبة الإنجاز أعلى من 50%</span>
-      <span style="color: red; margin-right: 10px;">■ نسبة الإنجاز أقل من 50%</span>
-      <span style="color: green; margin-right: 10px;">■ نسبة الإنجاز أعلى من 89%</span>
-    </div>
-  </div>
+    <!-- أضف هذا الأسلوب للزر تسجيل الخروج -->
+    <style>
+        .logout-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 8px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .logout-button:hover {
+            background-color: #c82333;
+        }
 
-  <table style="width:100%; border-collapse: collapse; text-align: center; direction: rtl;">
-    <thead>
-      <tr style="background-color: #f2f2f2;">
-        <th style="border: 1px solid #ddd; padding: 8px;">اسم المعلم</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">عدد الدروس الكلي</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">الدروس المعدة</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">نسبة الإنجاز</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">الواجبات</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">الإثراءات</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">الأنشطة</th>
-      </tr>
-    </thead>
-    <tbody>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #008CBA;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .date {
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- زر تسجيل الخروج -->
+    <button class="logout-button" onclick="logout()">تسجيل الخروج</button>
+
+    <div class="container">
+        <div class="header">
+            <h2>ابتدائية الإمام محمد بن علي القشيري</h2>
+        <!-- ... باقي المحتوى ... -->
+
 <script>
 if (localStorage.getItem('loggedIn') !== 'true') {
     window.location.href = 'login.html';
