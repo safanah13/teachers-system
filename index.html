@@ -2,12 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <!-- التحقق من تسجيل الدخول -->
+    <!-- التحقق من تسجيل الدخول مرة واحدة فقط -->
     <script>
         if (localStorage.getItem('isLoggedIn') !== 'true') {
             window.location.href = 'login.html';
         }
     </script>
+
 
     <!-- أضف هذا الأسلوب للزر تسجيل الخروج -->
     <style>
@@ -642,6 +643,10 @@ function updateAndSave(row) {
     saveAllData();
 }
 
+function logout() {
+    localStorage.removeItem('isLoggedIn');
+    window.location.href = 'login.html';
+}
 
 </script>
 
