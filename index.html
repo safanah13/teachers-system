@@ -28,6 +28,13 @@
       </tr>
     </thead>
     <tbody>
+<script>
+    // التحقق من حالة تسجيل الدخول
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+        window.location.href = 'login.html';
+    }
+</script>
+
       <tr>
         <td style="border: 1px solid #ddd; padding: 8px; color: blue;">ابراهيم مسلم الردادي</td>
         <td style="border: 1px solid #ddd; padding: 8px;">116</td>
