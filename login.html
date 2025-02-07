@@ -74,6 +74,11 @@
             background-color: #006d8f;
         }
 
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
         .error {
             color: #dc3545;
             margin-top: 15px;
@@ -88,6 +93,7 @@
             display: none;
             text-align: center;
             margin-top: 10px;
+            color: #008CBA;
         }
     </style>
 </head>
@@ -97,7 +103,7 @@
             <h2>ابتدائية الإمام محمد بن علي القشيري</h2>
             <h3>نظام متابعة المعلمين</h3>
         </div>
-        <form id="loginForm" onsubmit="return handleLogin(event)">
+        <form id="loginForm">
             <div class="form-group">
                 <label for="username">اسم المستخدم</label>
                 <input type="text" id="username" required>
@@ -113,22 +119,44 @@
     </div>
 
     <script>
-        // التحقق من وجود جلسة مسجلة
-        if (sessionStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = 'index.html';
+        // التحقق من وجود جلسة مسجلة عند تحميل الصفحة
+        window.onload = function() {
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                window.location.href = 'index.html';
+            }
+            // تنظيف حقول الإدخال
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        };
+
+        // دالة للتحقق من صحة المدخلات
+        function validateInput(username, password) {
+            if (!username || username.length < 3) {
+                return 'اسم المستخدم يجب أن يكون 3 أحرف على الأقل';
+            }
+            if (!password || password.length < 6) {
+                return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+            }
+            return null;
         }
 
         function showError(message) {
             const errorElement = document.getElementById('error-message');
             errorElement.textContent = message;
             errorElement.style.display = 'block';
+            
             setTimeout(() => {
                 errorElement.style.display = 'none';
             }, 3000);
         }
 
         function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            const loadingElement = document.getElementById('loading');
+            const submitButton = document.querySelector('button[type="submit"]');
+            
+            loadingElement.style.display = show ? 'block' : 'none';
+            submitButton.disabled = show;
+            submitButton.style.opacity = show ? '0.7' : '1';
         }
 
         async function handleLogin(event) {
@@ -137,32 +165,51 @@
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
-            if (!username || !password) {
-                showError('الرجاء ملء جميع الحقول');
+            // التحقق من صحة المدخلات
+            const validationError = validateInput(username, password);
+            if (validationError) {
+                showError(validationError);
                 return false;
             }
 
-            showLoading(true);
+            try {
+                showLoading(true);
 
-            // محاكاة تأخير الاتصال بالخادم
-            await new Promise(resolve => setTimeout(resolve, 1000));
+                // محاكاة تأخير الاتصال بالخادم
+                await new Promise(resolve => setTimeout(resolve, 1000));
 
-            if (username === "admin" && password === "123456") {
-                sessionStorage.setItem('isLoggedIn', 'true');
-                sessionStorage.setItem('username', username);
-                window.location.href = 'index.html';
-            } else {
+                // التحقق من بيانات الدخول
+                if (username === "admin" && password === "123456") {
+                    // تخزين بيانات الجلسة
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('username', username);
+                    sessionStorage.setItem('loginTime', new Date().toISOString());
+                    
+                    // التوجيه للصفحة الرئيسية
+                    window.location.href = 'index.html';
+                } else {
+                    throw new Error('بيانات الدخول غير صحيحة');
+                }
+            } catch (error) {
+                showError(error.message);
+            } finally {
                 showLoading(false);
-                showError('بيانات الدخول غير صحيحة');
             }
 
             return false;
         }
 
+        // إضافة مستمع الأحداث للنموذج
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+
         // إضافة خاصية الضغط على Enter للدخول
         document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('loginForm').requestSubmit();
+            if (e.key === 'Enter' && !e.shiftKey) {
+                const activeElement = document.activeElement;
+                if (activeElement.tagName === 'INPUT') {
+                    e.preventDefault();
+                    document.getElementById('loginForm').requestSubmit();
+                }
             }
         });
     </script>
