@@ -10,7 +10,6 @@
 <body>
     <div class="login-box">
         <h2>تسجيل الدخول للنظام</h2>
-        <!-- تم تغيير طريقة استدعاء الدالة -->
         <form onsubmit="login(event)">
             <div class="input-group">
                 <input type="text" id="username" placeholder="اسم المستخدم" required>
@@ -25,7 +24,7 @@
 
     <script>
         function login(event) {
-            event.preventDefault(); // منع السلوك الافتراضي للنموذج
+            event.preventDefault();
             
             var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
@@ -34,7 +33,7 @@
             if (username === "admin" && password === "123456") {
                 localStorage.setItem('loggedIn', 'true');
                 localStorage.setItem('username', username);
-                window.location.href = 'index.html';
+                window.location.href = 'main.html'; // تم تغيير هذا السطر
             } else {
                 error.style.display = 'block';
                 error.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
@@ -45,7 +44,7 @@
         // التحقق عند تحميل الصفحة
         window.onload = function() {
             if (localStorage.getItem('loggedIn') === 'true') {
-                window.location.href = 'index.html';
+                window.location.href = 'main.html'; // تم تغيير هذا السطر أيضاً
             }
         }
     </script>
