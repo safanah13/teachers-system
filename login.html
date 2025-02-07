@@ -120,16 +120,15 @@
 
     <script>
         // التحقق من وجود جلسة مسجلة عند تحميل الصفحة
-        window.onload = function() {
-            if (sessionStorage.getItem('isLoggedIn') === 'true') {
-                window.location.href = 'index.html';
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            // تنظيف الجلسة عند فتح صفحة تسجيل الدخول
+            sessionStorage.clear();
+            
             // تنظيف حقول الإدخال
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
-        };
+        });
 
-        // دالة للتحقق من صحة المدخلات
         function validateInput(username, password) {
             if (!username || username.length < 3) {
                 return 'اسم المستخدم يجب أن يكون 3 أحرف على الأقل';
@@ -164,13 +163,6 @@
             
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
-            
-            // التحقق من صحة المدخلات
-            const validationError = validateInput(username, password);
-            if (validationError) {
-                showError(validationError);
-                return false;
-            }
 
             try {
                 showLoading(true);
