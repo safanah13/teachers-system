@@ -25,15 +25,17 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
             text-align: center;
+            direction: rtl;
         }
         th {
             background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
         }
         .question-btn {
             padding: 5px 10px;
@@ -42,13 +44,6 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-        }
-        input {
-            text-align: right;
-            padding: 4px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
         }
         .color-legend {
             margin: 10px;
@@ -60,7 +55,6 @@
     </style>
 </head>
 <body>
-    <!-- التحقق من تسجيل الدخول -->
     <script>
         if (localStorage.getItem('loggedIn') !== 'true') {
             window.location.href = 'index.html';
@@ -86,7 +80,7 @@
         </div>
     </div>
 
-  <table style="width:100%; border-collapse: collapse; text-align: center; direction: rtl;">
+    <table style="width:100%; border-collapse: collapse; text-align: center; direction: rtl;">
     <thead>
       <tr style="background-color: #f2f2f2;">
         <th style="border: 1px solid #ddd; padding: 8px;">اسم المعلم</th>
@@ -432,81 +426,8 @@
         <td style="border: 1px solid #ddd; padding: 8px;">0</td>
         <td style="border: 1px solid #ddd; padding: 8px;">0</td>
       </tr>
-<script>
-    function addButtons() {
-    const rows = document.querySelectorAll('table tbody tr');
-    
-    rows.forEach(row => {
-        if (row.cells[0].tagName.toLowerCase() !== 'th') {
-            // تحويل خلايا الجدول إلى حقول إدخال
-            const cells = {
-                name: [0, row.cells[0].textContent.trim(), '250px', true],
-                total: [1, row.cells[1].textContent.trim(), '60px'],
-                prepared: [2, row.cells[2].textContent.trim(), '60px'],
-                homework: [4, row.cells[4].textContent.trim(), '60px'],
-                enrichment: [5, row.cells[5].textContent.trim(), '60px'],
-                activities: [6, row.cells[6].textContent.trim(), '60px']
-            };
 
-            // تحويل الخلايا إلى حقول إدخال
-            Object.entries(cells).forEach(([key, [index, value, width, isText]]) => {
-                row.cells[index].innerHTML = createInput(value, width, isText);
-            });
-
-            // إضافة زر المساءلة
-            const questionCell = document.createElement('td');
-            questionCell.style.cssText = 'border: 1px solid #ddd; padding: 8px;';
-            
-            const questionButton = document.createElement('button');
-            questionButton.textContent = 'مساءلة';
-            questionButton.className = 'question-btn';
-            questionButton.style.cssText = `
-                padding: 5px 10px;
-                background-color: #f44336;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                margin: 0 5px;
-            `;
-            
-            questionButton.onclick = function() {
-                const teacherData = {
-                    name: row.cells[0].querySelector('input').value,
-                    totalLessons: parseInt(row.cells[1].querySelector('input').value) || 0,
-                    preparedLessons: parseInt(row.cells[2].querySelector('input').value) || 0,
-                    completionRate: row.cells[3].textContent,
-                    homework: parseInt(row.cells[4].querySelector('input').value) || 0,
-                    enrichment: parseInt(row.cells[5].querySelector('input').value) || 0,
-                    activities: parseInt(row.cells[6].querySelector('input').value) || 0
-                };
-
-                if (validateTeacherData(teacherData)) {
-                    localStorage.setItem('selectedTeacherData', JSON.stringify(teacherData));
-                    window.open('مساءلة.html', '_blank');
-                } else {
-                    alert('الرجاء إدخال جميع البيانات المطلوبة للمعلم');
-                }
-            };
-
-            questionCell.appendChild(questionButton);
-            row.appendChild(questionCell);
-        }
-    });
-}
-
-// تحديث دالة التحقق من البيانات
-function validateTeacherData(data) {
-    return data.name && 
-           data.name.trim() !== '' && 
-           !isNaN(data.totalLessons) && 
-           !isNaN(data.preparedLessons) && 
-           !isNaN(data.homework) && 
-           !isNaN(data.enrichment) && 
-           !isNaN(data.activities);
-}
-// // الدوال المساعدة
-<script>
+    <script>
         // الدوال المساعدة
         function arabicToEnglish(str) {
             return str.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
@@ -517,15 +438,13 @@ function validateTeacherData(data) {
             return str.toString().replace(/[0-9]/g, d => arabicNumbers[d]);
         }
 
-        // دالة إنشاء حقل إدخال
         function createInput(value, width = '60px', isText = false) {
             return `<input type="${isText ? 'text' : 'number'}" 
                     value="${value}" 
-                    style="width: ${width};" 
+                    style="width: ${width}; text-align: right; padding: 4px; border: 1px solid #ddd; border-radius: 4px;" 
                     oninput="updateStats(this.parentNode.parentNode)">`;
         }
 
-        // دالة تحديث الإحصائيات
         function updateStats(row) {
             const totalLessons = parseInt(row.cells[1].querySelector('input').value) || 0;
             const preparedLessons = parseInt(row.cells[2].querySelector('input').value) || 0;
@@ -537,7 +456,6 @@ function validateTeacherData(data) {
             
             row.cells[3].textContent = percentage + '%';
             
-            // تحديث اللون
             const color = percentage < 50 ? 'red' : percentage >= 90 ? 'green' : 'blue';
             row.cells[0].querySelector('input').style.color = color;
             row.cells[3].style.color = color;
@@ -545,7 +463,6 @@ function validateTeacherData(data) {
             saveAllData();
         }
 
-        // دالة التحقق من البيانات
         function validateTeacherData(data) {
             return data && 
                    data.name.trim() !== '' && 
@@ -556,13 +473,12 @@ function validateTeacherData(data) {
                    !isNaN(data.activities);
         }
 
-        // دالة إضافة الأزرار
         function addButtons() {
             const rows = document.querySelectorAll('table tbody tr');
             
             rows.forEach(row => {
                 if (row.cells[0].tagName.toLowerCase() !== 'th') {
-                    // تحويل الخلايا إلى حقول إدخال
+                    // تحويل خلايا الجدول إلى حقول إدخال
                     const cells = {
                         name: [0, row.cells[0].textContent.trim(), '250px', true],
                         total: [1, row.cells[1].textContent.trim(), '60px'],
@@ -578,6 +494,9 @@ function validateTeacherData(data) {
 
                     // إضافة زر المساءلة
                     const questionCell = document.createElement('td');
+                    questionCell.style.border = '1px solid #ddd';
+                    questionCell.style.padding = '8px';
+                    
                     const questionButton = document.createElement('button');
                     questionButton.textContent = 'مساءلة';
                     questionButton.className = 'question-btn';
@@ -606,7 +525,6 @@ function validateTeacherData(data) {
             });
         }
 
-        // دالة حفظ البيانات
         function saveAllData() {
             const rows = document.querySelectorAll('table tbody tr');
             const tableData = Array.from(rows)
@@ -624,7 +542,6 @@ function validateTeacherData(data) {
             localStorage.setItem('tableData', JSON.stringify(tableData));
         }
 
-        // دالة تحميل البيانات المحفوظة
         function loadSavedData() {
             const savedData = localStorage.getItem('tableData');
             if (savedData) {
@@ -651,7 +568,6 @@ function validateTeacherData(data) {
             }
         }
 
-        // دالة تسجيل الخروج
         function logout() {
             localStorage.clear();
             window.location.href = 'index.html';
