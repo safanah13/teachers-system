@@ -1,17 +1,34 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <!-- ... head content ... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الصفحة الرئيسية</title>
 </head>
 <body>
     <script>
-    // التحقق من حالة تسجيل الدخول
-    document.addEventListener('DOMContentLoaded', function() {
-        if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+        // التحقق من تسجيل الدخول
+        if(localStorage.getItem('isLoggedIn') !== 'true') {
             window.location.href = 'login.html';
         }
-    });
-</script>
+    </script>
+    <h1>مرحباً بك في الصفحة الرئيسية</h1>
+    <p>أنت مسجل دخول باسم: <span id="userDisplay"></span></p>
+    <button onclick="logout()">تسجيل خروج</button>
+
+    <script>
+        // عرض اسم المستخدم
+        document.getElementById('userDisplay').textContent = localStorage.getItem('username');
+
+        // دالة تسجيل الخروج
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
 
     <div style="text-align: center; direction: rtl; margin-bottom: 20px;">
         <h2>ابتدائية الإمام محمد بن علي القشيري</h2>
