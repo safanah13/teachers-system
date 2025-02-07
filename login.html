@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول</title>
+    <title>تسجيل الدخول - نظام متابعة المعلمين</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,6 +22,12 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
             width: 320px;
             max-width: 90%;
+        }
+
+        .school-title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
         }
 
         .form-group {
@@ -68,10 +74,6 @@
             background-color: #006d8f;
         }
 
-        button:active {
-            transform: scale(0.98);
-        }
-
         .error {
             color: #dc3545;
             margin-top: 15px;
@@ -80,7 +82,6 @@
             padding: 10px;
             background-color: #ffe6e6;
             border-radius: 4px;
-            font-size: 14px;
         }
 
         .loading {
@@ -88,44 +89,35 @@
             text-align: center;
             margin-top: 10px;
         }
-
-        .loading::after {
-            content: "...";
-            animation: dots 1s steps(5, end) infinite;
-        }
-
-        @keyframes dots {
-            0%, 20% { content: "."; }
-            40% { content: ".."; }
-            60%, 100% { content: "..."; }
-        }
-
-        @media (max-width: 480px) {
-            .login-container {
-                padding: 20px;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2 style="text-align: center; color: #333; margin-bottom: 30px;">تسجيل الدخول</h2>
+        <div class="school-title">
+            <h2>ابتدائية الإمام محمد بن علي القشيري</h2>
+            <h3>نظام متابعة المعلمين</h3>
+        </div>
         <form id="loginForm" onsubmit="return handleLogin(event)">
             <div class="form-group">
                 <label for="username">اسم المستخدم</label>
-                <input type="text" id="username" required minlength="3" maxlength="20">
+                <input type="text" id="username" required>
             </div>
             <div class="form-group">
                 <label for="password">كلمة المرور</label>
-                <input type="password" id="password" required minlength="6">
+                <input type="password" id="password" required>
             </div>
             <button type="submit">دخول</button>
-            <div id="loading" class="loading">جاري تسجيل الدخول</div>
+            <div id="loading" class="loading">جاري تسجيل الدخول...</div>
             <div id="error-message" class="error"></div>
         </form>
     </div>
 
     <script>
+        // التحقق من وجود جلسة مسجلة
+        if (sessionStorage.getItem('isLoggedIn') === 'true') {
+            window.location.href = 'index.html';
+        }
+
         function showError(message) {
             const errorElement = document.getElementById('error-message');
             errorElement.textContent = message;
@@ -157,19 +149,14 @@
 
             if (username === "admin" && password === "123456") {
                 sessionStorage.setItem('isLoggedIn', 'true');
-                // تعديل الرابط ليتناسب مع هيكل GitHub Pages
-                window.location.href = '/teachers-system/index.html';
+                sessionStorage.setItem('username', username);
+                window.location.href = 'index.html';
             } else {
                 showLoading(false);
                 showError('بيانات الدخول غير صحيحة');
             }
 
             return false;
-        }
-
-        // التحقق من وجود جلسة مسجلة
-        if (sessionStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = '/teachers-system/index.html';
         }
 
         // إضافة خاصية الضغط على Enter للدخول
