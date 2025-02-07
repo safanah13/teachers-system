@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <title>إحصائية المعلمين</title>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // تحقق من وجود المستخدم المسجل
-        if (localStorage.getItem('loggedIn') === 'true') {
-            // عرض "admin" كاسم المستخدم
-            document.getElementById('userDisplay').textContent = 'admin';
+        // التحقق من تسجيل الدخول أولاً
+        if (localStorage.getItem('loggedIn') !== 'true') {
+            window.location.href = 'index.html';
         }
-    });
-</script>
+        
+        // عند تحميل الصفحة
+        window.onload = function() {
+            // عرض اسم المستخدم
+            document.getElementById('userDisplay').textContent = 'admin';
+        };
+    </script>
      <script>
         if (localStorage.getItem('loggedIn') !== 'true') {
             window.location.href = 'index.html';
