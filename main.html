@@ -5,9 +5,10 @@
     <title>إحصائية المعلمين</title>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const username = localStorage.getItem('username');
-        if (username) {
-            document.getElementById('userDisplay').textContent = username;
+        // تحقق من وجود المستخدم المسجل
+        if (localStorage.getItem('loggedIn') === 'true') {
+            // عرض "admin" كاسم المستخدم
+            document.getElementById('userDisplay').textContent = 'admin';
         }
     });
 </script>
