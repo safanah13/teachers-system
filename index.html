@@ -5,11 +5,13 @@
 </head>
 <body>
     <script>
-        // التحقق من تسجيل الدخول
-        if (!sessionStorage.getItem('isLoggedIn')) {
+    // التحقق من حالة تسجيل الدخول
+    document.addEventListener('DOMContentLoaded', function() {
+        if (sessionStorage.getItem('isLoggedIn') !== 'true') {
             window.location.href = 'login.html';
         }
-    </script>
+    });
+</script>
 
     <div style="text-align: center; direction: rtl; margin-bottom: 20px;">
         <h2>ابتدائية الإمام محمد بن علي القشيري</h2>
