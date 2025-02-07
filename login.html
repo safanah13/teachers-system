@@ -113,8 +113,7 @@
         <form id="loginForm" onsubmit="return handleLogin(event)">
             <div class="form-group">
                 <label for="username">اسم المستخدم</label>
-                <input type="text" id="username" required minlength="3" maxlength="20"
-                    pattern="[a-zA-Z0-9_]*" title="يرجى استخدام الحروف والأرقام فقط">
+                <input type="text" id="username" required minlength="3" maxlength="20">
             </div>
             <div class="form-group">
                 <label for="password">كلمة المرور</label>
@@ -127,11 +126,6 @@
     </div>
 
     <script>
-        function validateInput(input) {
-            const regex = /^[a-zA-Z0-9_]+$/;
-            return regex.test(input);
-        }
-
         function showError(message) {
             const errorElement = document.getElementById('error-message');
             errorElement.textContent = message;
@@ -151,15 +145,8 @@
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
-            // التحقق من الحقول الفارغة
             if (!username || !password) {
                 showError('الرجاء ملء جميع الحقول');
-                return false;
-            }
-
-            // التحقق من صحة المدخلات
-            if (!validateInput(username)) {
-                showError('اسم المستخدم يجب أن يحتوي على أحرف وأرقام فقط');
                 return false;
             }
 
@@ -169,9 +156,9 @@
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             if (username === "admin" && password === "123456") {
-                // استخدام sessionStorage بدلاً من localStorage
                 sessionStorage.setItem('isLoggedIn', 'true');
-                window.location.href = 'index.html';
+                // تعديل الرابط ليتناسب مع هيكل GitHub Pages
+                window.location.href = '/teachers-system/index.html';
             } else {
                 showLoading(false);
                 showError('بيانات الدخول غير صحيحة');
@@ -182,7 +169,7 @@
 
         // التحقق من وجود جلسة مسجلة
         if (sessionStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = 'index.html';
+            window.location.href = '/teachers-system/index.html';
         }
 
         // إضافة خاصية الضغط على Enter للدخول
