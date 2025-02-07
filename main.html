@@ -45,13 +45,6 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        .color-legend {
-            margin: 10px;
-            text-align: center;
-        }
-        .color-legend span {
-            margin-right: 10px;
-        }
     </style>
 </head>
 <body>
@@ -73,27 +66,27 @@
         <h2>ابتدائية الإمام محمد بن علي القشيري</h2>
         <h3>إحصائية عامة عن أعمال المعلمين بمنصة مدرستي</h3>
         <h4>من تاريخ 14-2-1446 إلى 30-7-1446</h4>
-        <div class="color-legend">
-            <span style="color: blue;">■ نسبة الإنجاز أعلى من 50%</span>
-            <span style="color: red;">■ نسبة الإنجاز أقل من 50%</span>
-            <span style="color: green;">■ نسبة الإنجاز أعلى من 89%</span>
+        <div style="margin: 10px;">
+            <span style="color: blue; margin-right: 10px;">■ نسبة الإنجاز أعلى من 50%</span>
+            <span style="color: red; margin-right: 10px;">■ نسبة الإنجاز أقل من 50%</span>
+            <span style="color: green; margin-right: 10px;">■ نسبة الإنجاز أعلى من 89%</span>
         </div>
     </div>
 
-    <table style="width:100%; border-collapse: collapse; text-align: center; direction: rtl;">
-    <thead>
-      <tr style="background-color: #f2f2f2;">
-        <th style="border: 1px solid #ddd; padding: 8px;">اسم المعلم</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">عدد الدروس الكلي</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">الدروس المعدة</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">نسبة الإنجاز</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">الواجبات</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">الإثراءات</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">الأنشطة</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
+    <table>
+        <thead>
+            <tr>
+                <th>اسم المعلم</th>
+                <th>عدد الدروس الكلي</th>
+                <th>الدروس المعدة</th>
+                <th>نسبة الإنجاز</th>
+                <th>الواجبات</th>
+                <th>الإثراءات</th>
+                <th>الأنشطة</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
         <td style="border: 1px solid #ddd; padding: 8px; color: blue;">ابراهيم مسلم الردادي</td>
         <td style="border: 1px solid #ddd; padding: 8px;">116</td>
         <td style="border: 1px solid #ddd; padding: 8px;">77</td>
@@ -426,23 +419,12 @@
         <td style="border: 1px solid #ddd; padding: 8px;">0</td>
         <td style="border: 1px solid #ddd; padding: 8px;">0</td>
       </tr>
+        </tbody>
+    </table>
 
     <script>
-        // الدوال المساعدة
-        function arabicToEnglish(str) {
-            return str.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
-        }
-
-        function englishToArabic(str) {
-            const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-            return str.toString().replace(/[0-9]/g, d => arabicNumbers[d]);
-        }
-
         function createInput(value, width = '60px', isText = false) {
-            return `<input type="${isText ? 'text' : 'number'}" 
-                    value="${value}" 
-                    style="width: ${width}; text-align: right; padding: 4px; border: 1px solid #ddd; border-radius: 4px;" 
-                    oninput="updateStats(this.parentNode.parentNode)">`;
+            return `<input type="${isText ? 'text' : 'number'}" value="${value}" style="width: ${width}; text-align: right; padding: 4px; border: 1px solid #ddd; border-radius: 4px;" oninput="updateStats(this.parentNode.parentNode)">`;
         }
 
         function updateStats(row) {
@@ -459,125 +441,51 @@
             const color = percentage < 50 ? 'red' : percentage >= 90 ? 'green' : 'blue';
             row.cells[0].querySelector('input').style.color = color;
             row.cells[3].style.color = color;
-            
-            saveAllData();
-        }
-
-        function validateTeacherData(data) {
-            return data && 
-                   data.name.trim() !== '' && 
-                   !isNaN(data.totalLessons) && 
-                   !isNaN(data.preparedLessons) && 
-                   !isNaN(data.homework) && 
-                   !isNaN(data.enrichment) && 
-                   !isNaN(data.activities);
         }
 
         function addButtons() {
             const rows = document.querySelectorAll('table tbody tr');
-            
             rows.forEach(row => {
-                if (row.cells[0].tagName.toLowerCase() !== 'th') {
-                    // تحويل خلايا الجدول إلى حقول إدخال
-                    const cells = {
-                        name: [0, row.cells[0].textContent.trim(), '250px', true],
-                        total: [1, row.cells[1].textContent.trim(), '60px'],
-                        prepared: [2, row.cells[2].textContent.trim(), '60px'],
-                        homework: [4, row.cells[4].textContent.trim(), '60px'],
-                        enrichment: [5, row.cells[5].textContent.trim(), '60px'],
-                        activities: [6, row.cells[6].textContent.trim(), '60px']
+                // تحويل الخلايا إلى حقول إدخال
+                row.cells[0].innerHTML = createInput(row.cells[0].textContent.trim(), '250px', true);
+                row.cells[1].innerHTML = createInput(row.cells[1].textContent.trim());
+                row.cells[2].innerHTML = createInput(row.cells[2].textContent.trim());
+                row.cells[4].innerHTML = createInput(row.cells[4].textContent.trim());
+                row.cells[5].innerHTML = createInput(row.cells[5].textContent.trim());
+                row.cells[6].innerHTML = createInput(row.cells[6].textContent.trim());
+
+                // إضافة زر المساءلة
+                const questionCell = document.createElement('td');
+                const questionButton = document.createElement('button');
+                questionButton.textContent = 'مساءلة';
+                questionButton.className = 'question-btn';
+                
+                questionButton.onclick = function() {
+                    const teacherData = {
+                        name: row.cells[0].querySelector('input').value,
+                        totalLessons: parseInt(row.cells[1].querySelector('input').value) || 0,
+                        preparedLessons: parseInt(row.cells[2].querySelector('input').value) || 0,
+                        homework: parseInt(row.cells[4].querySelector('input').value) || 0,
+                        enrichment: parseInt(row.cells[5].querySelector('input').value) || 0,
+                        activities: parseInt(row.cells[6].querySelector('input').value) || 0
                     };
 
-                    Object.entries(cells).forEach(([key, [index, value, width, isText]]) => {
-                        row.cells[index].innerHTML = createInput(value, width, isText);
-                    });
+                    localStorage.setItem('selectedTeacherData', JSON.stringify(teacherData));
+                    window.open('مساءلة.html', '_blank');
+                };
 
-                    // إضافة زر المساءلة
-                    const questionCell = document.createElement('td');
-                    questionCell.style.border = '1px solid #ddd';
-                    questionCell.style.padding = '8px';
-                    
-                    const questionButton = document.createElement('button');
-                    questionButton.textContent = 'مساءلة';
-                    questionButton.className = 'question-btn';
-                    
-                    questionButton.onclick = function() {
-                        const teacherData = {
-                            name: row.cells[0].querySelector('input').value,
-                            totalLessons: parseInt(row.cells[1].querySelector('input').value) || 0,
-                            preparedLessons: parseInt(row.cells[2].querySelector('input').value) || 0,
-                            homework: parseInt(row.cells[4].querySelector('input').value) || 0,
-                            enrichment: parseInt(row.cells[5].querySelector('input').value) || 0,
-                            activities: parseInt(row.cells[6].querySelector('input').value) || 0
-                        };
-
-                        if (validateTeacherData(teacherData)) {
-                            localStorage.setItem('selectedTeacherData', JSON.stringify(teacherData));
-                            window.open('مساءلة.html', '_blank');
-                        } else {
-                            alert('الرجاء إدخال جميع البيانات المطلوبة للمعلم');
-                        }
-                    };
-
-                    questionCell.appendChild(questionButton);
-                    row.appendChild(questionCell);
-                }
+                questionCell.appendChild(questionButton);
+                row.appendChild(questionCell);
             });
         }
 
-        function saveAllData() {
-            const rows = document.querySelectorAll('table tbody tr');
-            const tableData = Array.from(rows)
-                .filter(row => row.cells[0].tagName.toLowerCase() !== 'th')
-                .map(row => ({
-                    name: row.cells[0].querySelector('input').value.trim(),
-                    totalLessons: row.cells[1].querySelector('input').value,
-                    preparedLessons: row.cells[2].querySelector('input').value,
-                    completionRate: row.cells[3].textContent,
-                    homework: row.cells[4].querySelector('input').value,
-                    enrichment: row.cells[5].querySelector('input').value,
-                    activities: row.cells[6].querySelector('input').value
-                }));
-            
-            localStorage.setItem('tableData', JSON.stringify(tableData));
-        }
-
-        function loadSavedData() {
-            const savedData = localStorage.getItem('tableData');
-            if (savedData) {
-                const tableData = JSON.parse(savedData);
-                const rows = document.querySelectorAll('table tbody tr');
-                
-                rows.forEach((row, index) => {
-                    if (row.cells[0].tagName.toLowerCase() !== 'th' && tableData[index]) {
-                        const data = tableData[index];
-                        const inputs = row.querySelectorAll('input');
-                        
-                        if (inputs.length) {
-                            inputs[0].value = data.name || '';
-                            inputs[1].value = data.totalLessons || 0;
-                            inputs[2].value = data.preparedLessons || 0;
-                            inputs[3].value = data.homework || 0;
-                            inputs[4].value = data.enrichment || 0;
-                            inputs[5].value = data.activities || 0;
-                            
-                            updateStats(row);
-                        }
-                    }
-                });
-            }
-        }
-
         function logout() {
-            localStorage.clear();
+            localStorage.removeItem('loggedIn');
             window.location.href = 'index.html';
         }
 
-        // تهيئة الصفحة
-        document.addEventListener('DOMContentLoaded', () => {
-            addButtons();
-            loadSavedData();
-        });
+        // تنفيذ عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', addButtons);
     </script>
 </body>
 </html>
