@@ -3,25 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>إحصائية المعلمين</title>
-    <script>
-        // التحقق من تسجيل الدخول أولاً
-        if (localStorage.getItem('loggedIn') !== 'true') {
-            window.location.href = 'index.html';
-        }
-        
-        // عند تحميل الصفحة
-        window.onload = function() {
-            // عرض اسم المستخدم
-            document.getElementById('userDisplay').textContent = 'admin';
-        };
-    </script>
-     <script>
-        if (localStorage.getItem('loggedIn') !== 'true') {
-            window.location.href = 'index.html';
-        }
-    </script>
     <style>
-        /* أضف الأنماط CSS هنا */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 20px;
@@ -40,25 +22,67 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        /* باقي الأنماط */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .question-btn {
+            padding: 5px 10px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input {
+            text-align: right;
+            padding: 4px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .color-legend {
+            margin: 10px;
+            text-align: center;
+        }
+        .color-legend span {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
+    <!-- التحقق من تسجيل الدخول -->
+    <script>
+        if (localStorage.getItem('loggedIn') !== 'true') {
+            window.location.href = 'index.html';
+        }
+    </script>
+
     <div class="header">
         <div>
             <h1>مرحباً بك في لوحة التحكم</h1>
-            <p>المستخدم: <span id="userDisplay"></span></p>
+            <p>المستخدم: <span id="userDisplay">admin</span></p>
         </div>
         <button class="logout-btn" onclick="logout()">تسجيل خروج</button>
     </div>
-    <div style="text-align: center; direction: rtl; margin-bottom: 20px;">
+
+    <div style="text-align: center;">
         <h2>ابتدائية الإمام محمد بن علي القشيري</h2>
         <h3>إحصائية عامة عن أعمال المعلمين بمنصة مدرستي</h3>
         <h4>من تاريخ 14-2-1446 إلى 30-7-1446</h4>
-        <div style="margin: 10px;">
-            <span style="color: blue; margin-right: 10px;">■ نسبة الإنجاز أعلى من 50%</span>
-            <span style="color: red; margin-right: 10px;">■ نسبة الإنجاز أقل من 50%</span>
-            <span style="color: green; margin-right: 10px;">■ نسبة الإنجاز أعلى من 89%</span>
+        <div class="color-legend">
+            <span style="color: blue;">■ نسبة الإنجاز أعلى من 50%</span>
+            <span style="color: red;">■ نسبة الإنجاز أقل من 50%</span>
+            <span style="color: green;">■ نسبة الإنجاز أعلى من 89%</span>
         </div>
     </div>
 
@@ -482,241 +506,162 @@ function validateTeacherData(data) {
            !isNaN(data.activities);
 }
 // // الدوال المساعدة
-function arabicToEnglish(str) {
-    return str.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
-}
-
-function englishToArabic(str) {
-    const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-    return str.toString().replace(/[0-9]/g, d => arabicNumbers[d]);
-}
-
-// دالة إنشاء حقل إدخال
-function createInput(value, width = '250px', isText = false) {
-    return `<input type="${isText ? 'text' : 'number'}" 
-            value="${value}" 
-            style="width: ${width}; 
-            text-align: right; 
-            padding: 4px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            min-width: ${isText ? '250px' : '60px'};
-            max-width: ${isText ? '300px' : '60px'};
-            overflow: visible;" 
-            oninput="updateStats(this.parentNode.parentNode)">`;
-}
-
-
-// تحديث دالة إضافة الأزرار والحقول
-function addButtons() {
-    const rows = document.querySelectorAll('table tbody tr');
-    
-    rows.forEach(row => {
-        if (row.cells[0].tagName.toLowerCase() !== 'th') {
-            // تحويل خلايا الجدول إلى حقول إدخال
-            const cells = {
-    name: [0, row.cells[0].textContent.trim(), '250px', true],
-    total: [1, row.cells[1].textContent.trim(), '60px'],
-    prepared: [2, row.cells[2].textContent.trim(), '60px'],
-    homework: [4, row.cells[4].textContent.trim(), '60px'],
-    enrichment: [5, row.cells[5].textContent.trim(), '60px'],
-    activities: [6, row.cells[6].textContent.trim(), '60px']
-};
-
-
-            // باقي الكود كما هو...
+<script>
+        // الدوال المساعدة
+        function arabicToEnglish(str) {
+            return str.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
         }
-    });
-}
 
-// دالة تحديث ألوان الصف
-function updateRowColors(row, percentage) {
-    const color = percentage < 50 ? 'red' : percentage >= 90 ? 'green' : 'blue';
-    row.cells[0].querySelector('input').style.color = color;
-    row.cells[3].style.color = color;
-}
-
-// دالة تحديث الإحصائيات
-function updateStats(row) {
-    try {
-        // الحصول على القيم من حقول الإدخال
-        const totalLessons = parseInt(row.cells[1].querySelector('input').value) || 0;
-        const preparedLessons = parseInt(row.cells[2].querySelector('input').value) || 0;
-        
-        // حساب النسبة المئوية
-        let percentage = 0;
-        if (totalLessons > 0) {
-            percentage = Math.round((preparedLessons / totalLessons) * 100);
+        function englishToArabic(str) {
+            const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            return str.toString().replace(/[0-9]/g, d => arabicNumbers[d]);
         }
-        
-        // تحديث خلية نسبة الإنجاز
-        row.cells[3].textContent = percentage + '%';
-        
-        // تحديث اللون بناءً على النسبة
-        if (percentage < 50) {
-            row.cells[0].querySelector('input').style.color = 'red';
-            row.cells[3].style.color = 'red';
-        } else if (percentage >= 90) {
-            row.cells[0].querySelector('input').style.color = 'green';
-            row.cells[3].style.color = 'green';
-        } else {
-            row.cells[0].querySelector('input').style.color = 'blue';
-            row.cells[3].style.color = 'blue';
+
+        // دالة إنشاء حقل إدخال
+        function createInput(value, width = '60px', isText = false) {
+            return `<input type="${isText ? 'text' : 'number'}" 
+                    value="${value}" 
+                    style="width: ${width};" 
+                    oninput="updateStats(this.parentNode.parentNode)">`;
         }
-        
-        // حفظ البيانات
-        saveAllData();
-    } catch (error) {
-        console.error('خطأ في تحديث الإحصائيات:', error);
-    }
-}
 
-// تحديث دالة إنشاء حقل الإدخال لتشمل حدث تغيير القيمة
-function createInput(value, width = '60px', isText = false) {
-    return `<input type="${isText ? 'text' : 'number'}" 
-            value="${value}" 
-            style="width: ${width}; 
-            text-align: right; 
-            padding: 4px;
-            border: 1px solid #ddd;
-            border-radius: 4px;" 
-            oninput="updateStats(this.parentNode.parentNode)">`; // تم تغيير الحدث من updateAndSave إلى updateStats
-}
+        // دالة تحديث الإحصائيات
+        function updateStats(row) {
+            const totalLessons = parseInt(row.cells[1].querySelector('input').value) || 0;
+            const preparedLessons = parseInt(row.cells[2].querySelector('input').value) || 0;
+            
+            let percentage = 0;
+            if (totalLessons > 0) {
+                percentage = Math.round((preparedLessons / totalLessons) * 100);
+            }
+            
+            row.cells[3].textContent = percentage + '%';
+            
+            // تحديث اللون
+            const color = percentage < 50 ? 'red' : percentage >= 90 ? 'green' : 'blue';
+            row.cells[0].querySelector('input').style.color = color;
+            row.cells[3].style.color = color;
+            
+            saveAllData();
+        }
 
+        // دالة التحقق من البيانات
+        function validateTeacherData(data) {
+            return data && 
+                   data.name.trim() !== '' && 
+                   !isNaN(data.totalLessons) && 
+                   !isNaN(data.preparedLessons) && 
+                   !isNaN(data.homework) && 
+                   !isNaN(data.enrichment) && 
+                   !isNaN(data.activities);
+        }
 
-// دالة التحقق من البيانات
-function validateTeacherData(data) {
-    return data && 
-           data.name.trim() !== '' && 
-           data.totalLessons && 
-           data.preparedLessons && 
-           data.homework && 
-           data.enrichment && 
-           data.activities;
-}
+        // دالة إضافة الأزرار
+        function addButtons() {
+            const rows = document.querySelectorAll('table tbody tr');
+            
+            rows.forEach(row => {
+                if (row.cells[0].tagName.toLowerCase() !== 'th') {
+                    // تحويل الخلايا إلى حقول إدخال
+                    const cells = {
+                        name: [0, row.cells[0].textContent.trim(), '250px', true],
+                        total: [1, row.cells[1].textContent.trim(), '60px'],
+                        prepared: [2, row.cells[2].textContent.trim(), '60px'],
+                        homework: [4, row.cells[4].textContent.trim(), '60px'],
+                        enrichment: [5, row.cells[5].textContent.trim(), '60px'],
+                        activities: [6, row.cells[6].textContent.trim(), '60px']
+                    };
 
-// دالة إضافة الأزرار والحقول
-function addButtons() {
-    const rows = document.querySelectorAll('table tbody tr');
-    
-    rows.forEach(row => {
-        if (row.cells[0].tagName.toLowerCase() !== 'th') {
-            // تحويل خلايا الجدول إلى حقول إدخال
-            const cells = {
-                name: [0, row.cells[0].textContent.trim(), '150px', true],
-                total: [1, row.cells[1].textContent.trim()],
-                prepared: [2, row.cells[2].textContent.trim()],
-                homework: [4, row.cells[4].textContent.trim()],
-                enrichment: [5, row.cells[5].textContent.trim()],
-                activities: [6, row.cells[6].textContent.trim()]
-            };
+                    Object.entries(cells).forEach(([key, [index, value, width, isText]]) => {
+                        row.cells[index].innerHTML = createInput(value, width, isText);
+                    });
 
-            Object.values(cells).forEach(([index, value, width, isText]) => {
-                row.cells[index].innerHTML = createInput(value, width, isText);
+                    // إضافة زر المساءلة
+                    const questionCell = document.createElement('td');
+                    const questionButton = document.createElement('button');
+                    questionButton.textContent = 'مساءلة';
+                    questionButton.className = 'question-btn';
+                    
+                    questionButton.onclick = function() {
+                        const teacherData = {
+                            name: row.cells[0].querySelector('input').value,
+                            totalLessons: parseInt(row.cells[1].querySelector('input').value) || 0,
+                            preparedLessons: parseInt(row.cells[2].querySelector('input').value) || 0,
+                            homework: parseInt(row.cells[4].querySelector('input').value) || 0,
+                            enrichment: parseInt(row.cells[5].querySelector('input').value) || 0,
+                            activities: parseInt(row.cells[6].querySelector('input').value) || 0
+                        };
+
+                        if (validateTeacherData(teacherData)) {
+                            localStorage.setItem('selectedTeacherData', JSON.stringify(teacherData));
+                            window.open('مساءلة.html', '_blank');
+                        } else {
+                            alert('الرجاء إدخال جميع البيانات المطلوبة للمعلم');
+                        }
+                    };
+
+                    questionCell.appendChild(questionButton);
+                    row.appendChild(questionCell);
+                }
             });
+        }
 
-            // إضافة زر المساءلة
-            const cell = document.createElement('td');
-            cell.style.cssText = 'border: 1px solid #ddd; padding: 8px;';
-            
-            const button = document.createElement('button');
-            button.textContent = 'مساءلة';
-            button.style.cssText = `
-                padding: 5px 10px;
-                background-color: #f44336;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            `;
-            
-            button.onclick = function() {
-                const teacherData = {
+        // دالة حفظ البيانات
+        function saveAllData() {
+            const rows = document.querySelectorAll('table tbody tr');
+            const tableData = Array.from(rows)
+                .filter(row => row.cells[0].tagName.toLowerCase() !== 'th')
+                .map(row => ({
                     name: row.cells[0].querySelector('input').value.trim(),
                     totalLessons: row.cells[1].querySelector('input').value,
                     preparedLessons: row.cells[2].querySelector('input').value,
-                    completionRate: row.cells[3].textContent.replace('%', ''),
+                    completionRate: row.cells[3].textContent,
                     homework: row.cells[4].querySelector('input').value,
                     enrichment: row.cells[5].querySelector('input').value,
                     activities: row.cells[6].querySelector('input').value
-                };
-                
-                if (validateTeacherData(teacherData)) {
-                    localStorage.setItem('selectedTeacherData', JSON.stringify(teacherData));
-                    window.open('مساءلة.html', '_blank');
-                } else {
-                    alert('بيانات المعلم غير مكتملة');
-                }
-            };
+                }));
             
-            cell.appendChild(button);
-            row.appendChild(cell);
+            localStorage.setItem('tableData', JSON.stringify(tableData));
         }
-    });
-}
 
-// دالة حفظ البيانات
-function saveAllData() {
-    const rows = document.querySelectorAll('table tbody tr');
-    const tableData = Array.from(rows)
-        .filter(row => row.cells[0].tagName.toLowerCase() !== 'th')
-        .map(row => ({
-            name: row.cells[0].querySelector('input').value.trim(),
-            totalLessons: row.cells[1].querySelector('input').value,
-            preparedLessons: row.cells[2].querySelector('input').value,
-            completionRate: row.cells[3].textContent,
-            homework: row.cells[4].querySelector('input').value,
-            enrichment: row.cells[5].querySelector('input').value,
-            activities: row.cells[6].querySelector('input').value
-        }));
-    
-    localStorage.setItem('tableData', JSON.stringify(tableData));
-}
-
-// دالة تحميل البيانات المحفوظة
-function loadSavedData() {
-    const savedData = localStorage.getItem('tableData');
-    if (savedData) {
-        const tableData = JSON.parse(savedData);
-        const rows = document.querySelectorAll('table tbody tr');
-        
-        rows.forEach((row, index) => {
-            if (row.cells[0].tagName.toLowerCase() !== 'th' && tableData[index]) {
-                const data = tableData[index];
-                const inputs = row.querySelectorAll('input');
+        // دالة تحميل البيانات المحفوظة
+        function loadSavedData() {
+            const savedData = localStorage.getItem('tableData');
+            if (savedData) {
+                const tableData = JSON.parse(savedData);
+                const rows = document.querySelectorAll('table tbody tr');
                 
-                if (inputs.length) {
-                    inputs[0].value = data.name || '';
-                    inputs[1].value = data.totalLessons || 0;
-                    inputs[2].value = data.preparedLessons || 0;
-                    inputs[3].value = data.homework || 0;
-                    inputs[4].value = data.enrichment || 0;
-                    inputs[5].value = data.activities || 0;
-                    
-                    updateStats(row);
-                }
+                rows.forEach((row, index) => {
+                    if (row.cells[0].tagName.toLowerCase() !== 'th' && tableData[index]) {
+                        const data = tableData[index];
+                        const inputs = row.querySelectorAll('input');
+                        
+                        if (inputs.length) {
+                            inputs[0].value = data.name || '';
+                            inputs[1].value = data.totalLessons || 0;
+                            inputs[2].value = data.preparedLessons || 0;
+                            inputs[3].value = data.homework || 0;
+                            inputs[4].value = data.enrichment || 0;
+                            inputs[5].value = data.activities || 0;
+                            
+                            updateStats(row);
+                        }
+                    }
+                });
             }
-        });
-    }
-}
+        }
 
-// تهيئة الصفحة
-document.addEventListener('DOMContentLoaded', () => {
-    addButtons();
-    loadSavedData();
-});
-
-
-
-</script>
-<script>
+        // دالة تسجيل الخروج
         function logout() {
             localStorage.clear();
             window.location.href = 'index.html';
         }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            addButtons();
+            loadSavedData();
+        });
     </script>
-
-
-   </tbody>
- </table>
+</body>
+</html>
