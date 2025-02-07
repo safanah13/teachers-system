@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مساءلة خطية لإعداد الدروس</title>
-    <script src="https://cdn.jsdelivr.net/npm/hijri-date/hijri-date.js"></script>
-
     <style>
-        /* الأنماط الأصلية */
         body {
             font-family: Arial, sans-serif;
             margin: 10px;
@@ -15,45 +12,6 @@
             background-color: #f9f9f9;
             font-size: 13px;
         }
-        
-        /* أنماط النافذة المنبثقة */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.4);
-            overflow-y: auto;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 20px auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            width: 90%;
-            max-width: 800px;
-            position: relative;
-        }
-
-        .close-modal {
-            position: absolute;
-            left: 10px;
-            top: 10px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-        }
-
-        .close-modal:hover {
-            color: #000;
-        }
-
-        /* باقي الأنماط الأصلية */
         .container {
             background-color: #fff;
             padding: 15px;
@@ -62,9 +20,60 @@
             max-width: 800px;
             margin: auto;
         }
-        
-        /* [باقي الأنماط الأصلية كما هي] */
-        
+        h1, h2, h3 {
+            text-align: right;
+            color: #333;
+            margin: 5px 0;
+        }
+        h1 { font-size: 16px; }
+        h2 { font-size: 14px; text-align: center; }
+        h3 { font-size: 13px; }
+
+        .header {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto;
+            width: 80px;
+            height: auto;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 3px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 6px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .achievement-rate {
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .achievement-rate.red { color: red; }
+        .achievement-rate.blue { color: blue; }
+        .achievement-rate.green { color: green; }
+        .dotted-line {
+            border-bottom: 1px dotted #000;
+            width: 100%;
+            height: 15px;
+        }
+        .signature {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .notes { margin-top: 10px; }
         .print-button {
             background-color: #008CBA;
             color: white;
@@ -72,156 +81,173 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 13px;
             margin-top: 10px;
             display: block;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 10px auto;
         }
-
-        /* زر فتح المساءلة في الصفحة الرئيسية */
-        .open-questioning-btn {
-            background-color: #f0ad4e;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            margin: 10px;
-        }
-
-        .open-questioning-btn:hover {
-            background-color: #ec971f;
-        }
-
         @media print {
-            .modal {
-                position: static;
-                background: none;
-            }
-            .modal-content {
-                margin: 0;
-                padding: 0;
-            }
-            .close-modal,
-            .print-button {
-                display: none;
-            }
+            .print-button { display: none; }
+        }
+        .schools {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <!-- زر فتح المساءلة في الصفحة الرئيسية -->
-    <button onclick="openQuestioning()" class="open-questioning-btn">المساءلة</button>
-
-    <!-- النافذة المنبثقة للمساءلة -->
-    <div id="questioningModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeQuestioning()">&times;</span>
-            <div class="container">
-                <img src="شعار_وزارة_التعليم.png" alt="شعار وزارة التعليم" class="logo">
-                <h1>المملكة العربية السعودية</h1>
-                <h2>وزارة التعليم</h2>
-                <h3>إدارة التعليم بالمدينة المنورة</h3>
-                
-                <div class="schools">
-                    <label>
-                        <input type="checkbox" name="school" value="القشيري">
-                        ابتدائية الإمام محمد علي القشيري - تحفيظ
-                    </label>
-                    <label>
-                        <input type="checkbox" name="school" value="القرشي">
-                        ابتدائية سعيد بن الحارث القرشي - عام
-                    </label>
-                    <label>
-                        <input type="checkbox" name="school" value="ورش">
-                        متوسطة الإمام ورش - تحفيظ
-                    </label>
-                </div>
-
-                <h2>مساءلة خطية خاصة بإعداد الدروس بمنصة مدرستي</h2>
-
-                <form id="teacherForm">
-                    <!-- حقول النموذج -->
-                    <div class="form-group">
-                        <label for="teacherName">اسم المعلم:</label>
-                        <input type="text" id="teacherName" name="teacherName" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="totalLessons">عدد الدروس الكلي:</label>
-                        <input type="text" id="totalLessons" name="totalLessons" required oninput="convertNumbers(this)">
-                    </div>
-
-                    <!-- باقي حقول النموذج -->
-                    <!-- [نفس الحقول الموجودة في الكود الأصلي] -->
-
-                    <div class="signature">
-                        <div>
-                            <p>اسم المعلم: <span id="displayTeacherName"></span></p>
-                            <p>التوقيع: ..................................</p>
-                        </div>
-                        <div>
-                            <p>مدير المدرسة: محمد حسين منصور حوذان</p>
-                            <p>التوقيع: ..................................</p>
-                        </div>
-                    </div>
-
-                    <button type="button" class="print-button" onclick="printForm()">طباعة المساءلة</button>
-                </form>
+    <div class="container">
+        <div class="header">
+            <img src="شعار_وزارة_التعليم.png" alt="شعار وزارة التعليم" class="logo">
+            <h1>المملكة العربية السعودية</h1>
+            <h2>وزارة التعليم</h2>
+            <h3>إدارة التعليم بالمدينة المنورة</h3>
+            <div class="schools">
+                <label>
+                    <input type="checkbox" name="school" value="القشيري">
+                    ابتدائية الإمام محمد علي القشيري - تحفيظ
+                </label>
             </div>
         </div>
+
+        <h2>مساءلة خطية خاصة بإعداد الدروس بمنصة مدرستي</h2>
+
+        <form id="teacherForm">
+            <div class="form-group">
+                <label for="teacherName">اسم المعلم:</label>
+                <input type="text" id="teacherName" name="teacherName" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="totalLessons">عدد الدروس الكلي:</label>
+                <input type="text" id="totalLessons" name="totalLessons" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="preparedLessons">عدد الدروس المعدة:</label>
+                <input type="text" id="preparedLessons" name="preparedLessons" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="unpreparedLessons">عدد الدروس الغير معدة:</label>
+                <input type="text" id="unpreparedLessons" name="unpreparedLessons" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="achievementRate">نسبة الإنجاز:</label>
+                <input type="text" id="achievementRate" name="achievementRate" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="assignments">عدد الواجبات:</label>
+                <input type="text" id="assignments" name="assignments" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="enrichments">عدد الإثراءات:</label>
+                <input type="text" id="enrichments" name="enrichments" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="activities">عدد الأنشطة:</label>
+                <input type="text" id="activities" name="activities" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="teacherExplanation">إفادة المعلم:</label>
+                <div class="dotted-line"></div>
+            </div>
+
+            <div class="notes">
+                <label>ملاحظات مدير المدرسة:</label>
+                <label><input type="checkbox" name="managerNotes" value="accepted"> عذره مقبول</label>
+                <label><input type="checkbox" name="managerNotes" value="notAccepted"> عذره غير مقبول</label>
+                <label><input type="checkbox" name="managerNotes" value="improvement"> يعطى فرصة للتحسين</label>
+            </div>
+        </form>
+
+        <div class="signature">
+            <div>
+                <p>اسم المعلم: <span id="displayTeacherName"></span></p>
+                <p>التوقيع: ..................................</p>
+            </div>
+            <div>
+                <p>مدير المدرسة: محمد حسين منصور حوذان</p>
+                <p>التوقيع: ..................................</p>
+            </div>
+        </div>
+
+        <button type="button" class="print-button" onclick="printForm()">طباعة المساءلة</button>
     </div>
 
     <script>
-        function openQuestioning() {
-            document.getElementById('questioningModal').style.display = 'block';
-            fillTeacherData();
-        }
-
-        function closeQuestioning() {
-            document.getElementById('questioningModal').style.display = 'none';
-        }
-
-        // إغلاق النافذة عند النقر خارجها
-        window.onclick = function(event) {
-            let modal = document.getElementById('questioningModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        // دالة تحويل الأرقام إلى العربية
-        function convertNumbers(input) {
+        // دالة تحويل الأرقام من الإنجليزية إلى العربية
+        function englishToArabic(str) {
             const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-            let value = input.value;
-            value = value.replace(/[0-9]/g, (digit) => arabicNumbers[digit]);
-            input.value = value;
-            if (input.id !== 'hijriDate') {
-                calculateUnpreparedLessonsAndAchievementRate();
+            return str.toString().replace(/[0-9]/g, d => arabicNumbers[d]);
+        }
+
+        // دالة تحويل الأرقام من العربية إلى الإنجليزية
+        function arabicToEnglish(str) {
+            return str.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+        }
+
+        // دالة حساب الدروس غير المعدة ونسبة الإنجاز
+        function calculateUnpreparedLessonsAndAchievementRate(total, prepared) {
+            const unprepared = total - prepared;
+            const rate = (prepared / total) * 100;
+            return {
+                unprepared: unprepared,
+                rate: rate
+            };
+        }
+
+        // دالة تعبئة بيانات المعلم
+        function fillTeacherData() {
+            const teacherData = JSON.parse(localStorage.getItem('selectedTeacherData'));
+            
+            if (teacherData) {
+                // تعبئة اسم المعلم
+                document.getElementById('teacherName').value = teacherData.name;
+                document.getElementById('displayTeacherName').textContent = teacherData.name;
+
+                // تعبئة البيانات العددية مع تحويلها للأرقام العربية
+                document.getElementById('totalLessons').value = englishToArabic(teacherData.totalLessons);
+                document.getElementById('preparedLessons').value = englishToArabic(teacherData.preparedLessons);
+                document.getElementById('assignments').value = englishToArabic(teacherData.homework);
+                document.getElementById('enrichments').value = englishToArabic(teacherData.enrichment);
+                document.getElementById('activities').value = englishToArabic(teacherData.activities);
+
+                // حساب وتعبئة الدروس غير المعدة ونسبة الإنجاز
+                const stats = calculateUnpreparedLessonsAndAchievementRate(
+                    parseInt(teacherData.totalLessons),
+                    parseInt(teacherData.preparedLessons)
+                );
+
+                document.getElementById('unpreparedLessons').value = englishToArabic(stats.unprepared.toString());
+                
+                const achievementRateElement = document.getElementById('achievementRate');
+                achievementRateElement.value = englishToArabic(stats.rate.toFixed(2)) + '%';
+
+                // تحديد لون نسبة الإنجاز
+                if (stats.rate < 50) {
+                    achievementRateElement.className = 'achievement-rate red';
+                } else if (stats.rate >= 90) {
+                    achievementRateElement.className = 'achievement-rate green';
+                } else {
+                    achievementRateElement.className = 'achievement-rate blue';
+                }
             }
         }
 
-        // [باقي الدوال JavaScript الأصلية]
-        
+        // دالة الطباعة ومسح البيانات
         function printForm() {
             window.print();
-            setTimeout(() => {
-                closeQuestioning();
-            }, 1000);
+            localStorage.removeItem('selectedTeacherData');
         }
 
-        // تحديث اسم المعلم في قسم التوقيع
-        document.getElementById('teacherName').addEventListener('input', function() {
-            document.getElementById('displayTeacherName').textContent = this.value;
-        });
-
-        // عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            // تعيين التاريخ الهجري وتعبئة البيانات
-            fillTeacherData();
-        });
+        // تنفيذ عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', fillTeacherData);
     </script>
 </body>
 </html>
