@@ -409,6 +409,78 @@
         <td style="border: 1px solid #ddd; padding: 8px;">0</td>
       </tr>
 <script>
+    function addButtons() {
+    const rows = document.querySelectorAll('table tbody tr');
+    
+    rows.forEach(row => {
+        if (row.cells[0].tagName.toLowerCase() !== 'th') {
+            // تحويل خلايا الجدول إلى حقول إدخال
+            const cells = {
+                name: [0, row.cells[0].textContent.trim(), '250px', true],
+                total: [1, row.cells[1].textContent.trim(), '60px'],
+                prepared: [2, row.cells[2].textContent.trim(), '60px'],
+                homework: [4, row.cells[4].textContent.trim(), '60px'],
+                enrichment: [5, row.cells[5].textContent.trim(), '60px'],
+                activities: [6, row.cells[6].textContent.trim(), '60px']
+            };
+
+            // تحويل الخلايا إلى حقول إدخال
+            Object.entries(cells).forEach(([key, [index, value, width, isText]]) => {
+                row.cells[index].innerHTML = createInput(value, width, isText);
+            });
+
+            // إضافة زر المساءلة
+            const questionCell = document.createElement('td');
+            questionCell.style.cssText = 'border: 1px solid #ddd; padding: 8px;';
+            
+            const questionButton = document.createElement('button');
+            questionButton.textContent = 'مساءلة';
+            questionButton.className = 'question-btn';
+            questionButton.style.cssText = `
+                padding: 5px 10px;
+                background-color: #f44336;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                margin: 0 5px;
+            `;
+            
+            questionButton.onclick = function() {
+                const teacherData = {
+                    name: row.cells[0].querySelector('input').value,
+                    totalLessons: parseInt(row.cells[1].querySelector('input').value) || 0,
+                    preparedLessons: parseInt(row.cells[2].querySelector('input').value) || 0,
+                    completionRate: row.cells[3].textContent,
+                    homework: parseInt(row.cells[4].querySelector('input').value) || 0,
+                    enrichment: parseInt(row.cells[5].querySelector('input').value) || 0,
+                    activities: parseInt(row.cells[6].querySelector('input').value) || 0
+                };
+
+                if (validateTeacherData(teacherData)) {
+                    localStorage.setItem('selectedTeacherData', JSON.stringify(teacherData));
+                    window.open('مساءلة.html', '_blank');
+                } else {
+                    alert('الرجاء إدخال جميع البيانات المطلوبة للمعلم');
+                }
+            };
+
+            questionCell.appendChild(questionButton);
+            row.appendChild(questionCell);
+        }
+    });
+}
+
+// تحديث دالة التحقق من البيانات
+function validateTeacherData(data) {
+    return data.name && 
+           data.name.trim() !== '' && 
+           !isNaN(data.totalLessons) && 
+           !isNaN(data.preparedLessons) && 
+           !isNaN(data.homework) && 
+           !isNaN(data.enrichment) && 
+           !isNaN(data.activities);
+}
 // // الدوال المساعدة
 function arabicToEnglish(str) {
     return str.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
