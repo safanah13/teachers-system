@@ -2,7 +2,6 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول</title>
     <style>
         body {
@@ -12,7 +11,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #f5f5f5;
         }
         .login-box {
             background: white;
@@ -21,13 +20,10 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             width: 300px;
         }
-        .form-group {
-            margin-bottom: 15px;
-        }
         input {
             width: 100%;
             padding: 8px;
-            margin-top: 5px;
+            margin: 10px 0;
             box-sizing: border-box;
         }
         button {
@@ -39,56 +35,48 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        .error {
+        #error {
             color: red;
-            margin-top: 10px;
             display: none;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="login-box">
-        <h2>تسجيل الدخول</h2>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="username">اسم المستخدم:</label>
-                <input type="text" id="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">كلمة المرور:</label>
-                <input type="password" id="password" required>
-            </div>
+        <h2 style="text-align: center;">تسجيل الدخول</h2>
+        <form id="loginForm" onsubmit="return login(event)">
+            <input type="text" id="username" placeholder="اسم المستخدم" required>
+            <input type="password" id="password" placeholder="كلمة المرور" required>
             <button type="submit">دخول</button>
         </form>
-        <p id="errorMessage" class="error"></p>
+        <p id="error"></p>
     </div>
 
     <script>
-        // التحقق إذا كان المستخدم مسجل دخول بالفعل
-        if(localStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = 'index.html';
-        }
-
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        function login(event) {
+            event.preventDefault();
             
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('errorMessage');
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var error = document.getElementById('error');
 
-            // بيانات تسجيل الدخول الصحيحة (يمكنك تغييرها)
-            if(username === 'admin' && password === '123456') {
-                // تخزين حالة تسجيل الدخول
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('username', username);
-                
-                // الانتقال إلى الصفحة الرئيسية
+            if (username === "admin" && password === "123456") {
+                localStorage.setItem('loggedIn', 'true');
                 window.location.href = 'index.html';
             } else {
-                errorMessage.style.display = 'block';
-                errorMessage.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+                error.style.display = 'block';
+                error.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
             }
-        });
+            return false;
+        }
+
+        // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
+        window.onload = function() {
+            if (localStorage.getItem('loggedIn') === 'true') {
+                window.location.href = 'index.html';
+            }
+        }
     </script>
 </body>
 </html>
