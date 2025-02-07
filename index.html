@@ -3,19 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>تسجيل الدخول</title>
-    <style>
-        /* إضافة نمط جديد لإخفاء المحتوى أثناء التحقق */
-        .hidden {
-            display: none;
-        }
-        /* باقي الأنماط */
-    </style>
 </head>
 <body>
-    <!-- إضافة div جديد للتحميل -->
-    <div id="loading">جاري التحميل...</div>
-
-    <div id="loginForm" class="login-box hidden">
+    <div class="login-box">
         <h2>تسجيل الدخول للنظام</h2>
         <form onsubmit="login(event)">
             <div class="input-group">
@@ -30,16 +20,9 @@
     </div>
 
     <script>
-        // التحقق قبل تحميل الصفحة
-        (function() {
-            if (localStorage.getItem('loggedIn') === 'true') {
-                window.location.replace('main.html');
-            } else {
-                // إذا لم يكن مسجل الدخول، نظهر نموذج تسجيل الدخول
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('loginForm').classList.remove('hidden');
-            }
-        })();
+        // مسح بيانات تسجيل الدخول السابقة
+        localStorage.removeItem('loggedIn');
+        localStorage.removeItem('username');
 
         function login(event) {
             event.preventDefault();
