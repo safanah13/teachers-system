@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول</title>
     <style>
         body {
@@ -13,83 +14,183 @@
             height: 100vh;
             margin: 0;
         }
+
         .login-container {
             background-color: white;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 300px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            width: 320px;
+            max-width: 90%;
         }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
+
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
         }
+
         input {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
             box-sizing: border-box;
+            transition: all 0.3s ease;
+            font-size: 16px;
         }
+
+        input:focus {
+            outline: none;
+            border-color: #008CBA;
+            box-shadow: 0 0 8px rgba(0,140,186,0.3);
+        }
+
         button {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background-color: #008CBA;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
         }
+
         button:hover {
             background-color: #006d8f;
         }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
         .error {
-            color: red;
-            margin-top: 10px;
+            color: #dc3545;
+            margin-top: 15px;
             text-align: center;
             display: none;
+            padding: 10px;
+            background-color: #ffe6e6;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .loading::after {
+            content: "...";
+            animation: dots 1s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: "."; }
+            40% { content: ".."; }
+            60%, 100% { content: "..."; }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2 style="text-align: center;">تسجيل الدخول</h2>
-        <div class="form-group">
-            <label for="username">اسم المستخدم</label>
-            <input type="text" id="username" required>
-        </div>
-        <div class="form-group">
-            <label for="password">كلمة المرور</label>
-            <input type="password" id="password" required>
-        </div>
-        <button onclick="login()">دخول</button>
-        <div id="error-message" class="error">بيانات الدخول غير صحيحة</div>
+        <h2 style="text-align: center; color: #333; margin-bottom: 30px;">تسجيل الدخول</h2>
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+            <div class="form-group">
+                <label for="username">اسم المستخدم</label>
+                <input type="text" id="username" required minlength="3" maxlength="20"
+                    pattern="[a-zA-Z0-9_]*" title="يرجى استخدام الحروف والأرقام فقط">
+            </div>
+            <div class="form-group">
+                <label for="password">كلمة المرور</label>
+                <input type="password" id="password" required minlength="6">
+            </div>
+            <button type="submit">دخول</button>
+            <div id="loading" class="loading">جاري تسجيل الدخول</div>
+            <div id="error-message" class="error"></div>
+        </form>
     </div>
 
     <script>
-        function login() {
-            const username = document.getElementById('username').value;
+        function validateInput(input) {
+            const regex = /^[a-zA-Z0-9_]+$/;
+            return regex.test(input);
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 3000);
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('error-message');
+            
+            // التحقق من الحقول الفارغة
+            if (!username || !password) {
+                showError('الرجاء ملء جميع الحقول');
+                return false;
+            }
+
+            // التحقق من صحة المدخلات
+            if (!validateInput(username)) {
+                showError('اسم المستخدم يجب أن يحتوي على أحرف وأرقام فقط');
+                return false;
+            }
+
+            showLoading(true);
+
+            // محاكاة تأخير الاتصال بالخادم
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             if (username === "admin" && password === "123456") {
-                localStorage.setItem('isLoggedIn', 'true');
+                // استخدام sessionStorage بدلاً من localStorage
+                sessionStorage.setItem('isLoggedIn', 'true');
                 window.location.href = 'index.html';
             } else {
-                errorMessage.style.display = 'block';
-                setTimeout(() => {
-                    errorMessage.style.display = 'none';
-                }, 3000);
+                showLoading(false);
+                showError('بيانات الدخول غير صحيحة');
             }
+
+            return false;
         }
 
-        // التأكد من عدم وجود جلسة مسجلة
-        if (localStorage.getItem('isLoggedIn') === 'true') {
+        // التحقق من وجود جلسة مسجلة
+        if (sessionStorage.getItem('isLoggedIn') === 'true') {
             window.location.href = 'index.html';
         }
+
+        // إضافة خاصية الضغط على Enter للدخول
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('loginForm').requestSubmit();
+            }
+        });
     </script>
 </body>
 </html>
